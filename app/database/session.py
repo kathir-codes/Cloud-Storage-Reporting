@@ -1,17 +1,14 @@
 
-from sqlalchemy.orm import sessionmaker
+from collections.abc import Generator
 
-from app.database.connection import engine
+from sqlalchemy.orm import Session
 
-
-SessionLocal = sessionmaker(
-    bind=engine,
-    autoflush=False,
-    autocommit=False,
-)
+from app.database.connection import SessionLocal
 
 
-def get_db():
+def get_db() -> Generator[Session, None, None]:
+    """Provide a database session for the request."""
+
     db = SessionLocal()
 
     try:

@@ -37,12 +37,3 @@ def health_check():
         "message": "Cloud Storage Reporting API is running",
     }
 
-@app.get("/auth/me")
-def get_my_profile(
-    current_user: dict = Depends(get_current_user),
-):
-    return {
-        "message": "Authentication successful",
-        "user_id": current_user.get("sub"),
-        "email": current_user.get("email"),
-    }

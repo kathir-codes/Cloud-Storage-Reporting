@@ -3,10 +3,11 @@ from logging.config import fileConfig
 
 from alembic import context
 
+from app.core.config import settings
 from app.database.base import Base
-from app.database.connection import DATABASE_URL, engine
+from app.database.connection import engine
 
-# Import models so SQLAlchemy registers their tables.
+# Import all models so SQLAlchemy registers their tables.
 from app.modules.user import models as user_models
 from app.modules.file import models as file_models
 from app.modules.report import models as report_models
@@ -16,7 +17,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Use Supabase database URL
+DATABASE_URL = settings.DATABASE_URL
+
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is missing from .env")
 
@@ -25,15 +27,13 @@ config.set_main_option(
     DATABASE_URL.replace("%", "%%"),
 )
 
-# SQLAlchemy metadata for Alembic autogenerate
+# SQLAlchemy metadata for Alembic autogenerate.
 target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
-    url = DATABASE_URL
-
     context.configure(
-        url=url,
+        url=DATABASE_URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},

@@ -73,6 +73,11 @@ class File(Base):
         nullable=False,
     )
 
+    etag: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+
     status: Mapped[FileStatus] = mapped_column(
         SQLAlchemyEnum(FileStatus, name="file_status"),
         default=FileStatus.PENDING,
